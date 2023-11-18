@@ -1,18 +1,38 @@
-function criarGrid(rows, cols) {
-    const tabela = document.createElement('table');
+document.addEventListener('DOMContentLoaded', function () {
+  var canvasContainer = document.getElementById('canvas-container');
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+  var isDrawing = false;
 
-    for (let i = 0; i < rows; i++) {
-      const linha = document.createElement('tr');
+  canvas.width = canvasContainer.clientWidth;
+  canvas.height = canvasContainer.clientHeight;
 
-      for (let j = 0; j < cols; j++) {
-        const celula = document.createElement('td');
-        linha.appendChild(celula);
-      }
-
-      tabela.appendChild(linha);
+  canvas.addEventListener('mousedown', function (e) {
+    if (e.button === 0) { // Botão esquerdo do mouse
+      isDrawing = true;
+      context.beginPath();
+      context.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    } else if (e.button === 2) { // Botão direito do mouse
+      context.clearRect(0, 0, canvas.width, canvas.height);
     }
+  });
 
-    document.body.appendChild(tabela);
-  }
+  canvas.addEventListener('mousemove', function (e) {
+    if (isDrawing) {
+      context.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+      context.stroke();
+    }
+  });
 
-criarGrid(200, 200);
+  canvas.addEventListener('mouseup', function () {
+    isDrawing = false;
+  });
+
+  canvas.addEventListener('mouseout', function () {
+    isDrawing = false;
+  });
+
+  canvas.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+});
